@@ -4,6 +4,157 @@
              xmlns:local="clr-namespace:AI_Context_Generator"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- Modern Colors -->
+        <SolidColorBrush x:Key="PrimaryColor" Color="#3498db"/>
+        <SolidColorBrush x:Key="PrimaryDarkColor" Color="#2980b9"/>
+        <SolidColorBrush x:Key="SecondaryColor" Color="#2ecc71"/>
+        <SolidColorBrush x:Key="BackgroundColor" Color="#f8f9fa"/>
+        <SolidColorBrush x:Key="ForegroundColor" Color="#343a40"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#dee2e6"/>
+        
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryDarkColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryDarkColor}"/>
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Secondary Button Style -->
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource SecondaryColor}"/>
+        </Style>
+        
+        <!-- Text Box Style -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                        Focusable="False" 
+                                        HorizontalScrollBarVisibility="Hidden" 
+                                        VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}" TargetName="border"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}" TargetName="border"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Progress Bar Style -->
+        <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
+            <Setter Property="Background" Value="#e9ecef"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid>
+                            <Border x:Name="PART_Track" 
+                                    Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    CornerRadius="3"/>
+                            <Border x:Name="PART_Indicator" 
+                                    Background="{TemplateBinding Foreground}" 
+                                    BorderBrush="{TemplateBinding Foreground}" 
+                                    BorderThickness="0" 
+                                    CornerRadius="3" 
+                                    HorizontalAlignment="Left">
+                                <Border.Width>
+                                    <MultiBinding>
+                                        <MultiBinding.Converter>
+                                            <local:ProgressConverter/>
+                                        </MultiBinding.Converter>
+                                        <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        <Binding Path="ActualWidth" ElementName="PART_Track"/>
+                                    </MultiBinding>
+                                </Border.Width>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Group Box Style -->
+        <Style x:Key="ModernGroupBox" TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupBox}">
+                        <Grid SnapsToDevicePixels="true">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    Grid.Row="1" 
+                                    CornerRadius="4">
+                                <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                            <Border Background="{StaticResource BackgroundColor}" 
+                                    Margin="8,0,0,0" 
+                                    Grid.Row="0" 
+                                    Padding="3,0">
+                                <ContentPresenter ContentSource="Header" 
+                                                RecognizesAccessKey="True" 
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

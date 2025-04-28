@@ -5,47 +5,191 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Codebase Scanner" Height="450" Width="800">
-    <Grid Margin="10">
+        Title="AI Context Generator" Height="550" Width="900"
+        Background="{StaticResource BackgroundColor}">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="DirectoryPathTextBox" Width="600" Margin="0,0,10,0" 
-                     Text="{Binding SelectedDirectory, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Browse..." Width="80" Margin="0,0,10,0" Click="BrowseButton_Click"/>
-            <Button Content="Scan" Width="80" Click="ScanButton_Click"/>
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="AI Context Generator" 
+                       FontSize="22" 
+                       FontWeight="Bold" 
+                       Foreground="{StaticResource PrimaryColor}" 
+                       Margin="0,0,0,5"/>
+            <TextBlock Text="Generate context from your codebase for AI tools" 
+                       Foreground="{StaticResource ForegroundColor}" 
+                       Opacity="0.7" 
+                       FontSize="14" 
+                       Margin="0,0,0,15"/>
+            
+            <Border Background="White" 
+                    CornerRadius="6" 
+                    Padding="15" 
+                    BorderThickness="1" 
+                    BorderBrush="{StaticResource BorderColor}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBox x:Name="DirectoryPathTextBox" 
+                             Grid.Column="0"
+                             Style="{StaticResource ModernTextBox}"
+                             Margin="0,0,10,0"
+                             FontSize="13"
+                             Text="{Binding SelectedDirectory, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalContentAlignment="Center"
+                             Height="36"/>
+                    
+                    <Button Grid.Column="1" 
+                            Content="Browse" 
+                            Style="{StaticResource ModernButton}"
+                            Width="90" 
+                            Height="36"
+                            Margin="0,0,10,0" 
+                            Click="BrowseButton_Click"/>
+                    
+                    <Button Grid.Column="2" 
+                            Content="Scan" 
+                            Style="{StaticResource SecondaryButton}" 
+                            Width="90" 
+                            Height="36"
+                            Click="ScanButton_Click"/>
+                </Grid>
+            </Border>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <Label Content="Exclude patterns (comma-separated):" Margin="0,0,10,0"/>
-            <TextBox x:Name="ExtensionsTextBox" Width="400" 
-                     Text="bin,obj,packages,.exe,.dll"/>
-        </StackPanel>
+        <!-- Options -->
+        <Border Grid.Row="1" 
+                Background="White" 
+                CornerRadius="6" 
+                Padding="15" 
+                BorderThickness="1" 
+                BorderBrush="{StaticResource BorderColor}" 
+                Margin="0,0,0,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0" 
+                           Text="Exclude patterns:" 
+                           Margin="0,0,15,0" 
+                           VerticalAlignment="Center" 
+                           FontWeight="SemiBold"/>
+                
+                <TextBox x:Name="ExtensionsTextBox" 
+                         Grid.Column="1" 
+                         Style="{StaticResource ModernTextBox}"
+                         Text="bin,obj,packages,.exe,.dll"
+                         ToolTip="Enter comma-separated patterns to exclude from scanning"
+                         Height="36"
+                         VerticalContentAlignment="Center"/>
+            </Grid>
+        </Border>
 
-        <GroupBox Grid.Row="2" Header="Progress">
+        <!-- Progress Section -->
+        <GroupBox Grid.Row="2" 
+                  Header="Progress" 
+                  Style="{StaticResource ModernGroupBox}" 
+                  FontWeight="SemiBold" 
+                  Background="White">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <ProgressBar x:Name="ScanProgressBar" Height="20" Margin="0,0,0,10"
-                             Value="{Binding ProgressValue}" Maximum="100"/>
+                <!-- Progress Bar with Label -->
+                <Grid Grid.Row="0" Margin="0,0,0,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Grid.Row="0" Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Scan Progress" Grid.Column="0" FontSize="12" Opacity="0.8"/>
+                        <TextBlock Text="{Binding ProgressValue, StringFormat={}{0}%}" Grid.Column="1" FontSize="12" Opacity="0.8"/>
+                    </Grid>
+                    
+                    <ProgressBar x:Name="ScanProgressBar" 
+                                 Grid.Row="1"
+                                 Height="10" 
+                                 Style="{StaticResource ModernProgressBar}"
+                                 Value="{Binding ProgressValue}" 
+                                 Maximum="100"/>
+                </Grid>
 
-                <TextBox x:Name="LogTextBox" Grid.Row="1" IsReadOnly="True" 
-                         VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
-                         Text="{Binding LogText}"/>
+                <!-- Log Output -->
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Log Output" 
+                               Grid.Row="0" 
+                               Margin="0,0,0,5" 
+                               FontSize="12" 
+                               Opacity="0.8"/>
+                    
+                    <Border Grid.Row="1" 
+                            BorderThickness="1" 
+                            BorderBrush="{StaticResource BorderColor}" 
+                            CornerRadius="4">
+                        <TextBox x:Name="LogTextBox" 
+                                 IsReadOnly="True" 
+                                 VerticalScrollBarVisibility="Auto" 
+                                 TextWrapping="Wrap"
+                                 Text="{Binding LogText}" 
+                                 Background="#f8f9fa"
+                                 Padding="10"
+                                 FontFamily="Consolas"
+                                 BorderThickness="0"/>
+                    </Border>
+                </Grid>
             </Grid>
         </GroupBox>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <TextBlock x:Name="StatusText" Text="Ready" Margin="0,0,10,0" VerticalAlignment="Center"/>
-            <Button Content="Open Output File" Width="120" Click="OpenOutputButton_Click" IsEnabled="{Binding IsScanComplete}"/>
-        </StackPanel>
+        <!-- Status Footer -->
+        <Grid Grid.Row="3" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Border Grid.Column="0" 
+                    Background="White" 
+                    CornerRadius="4" 
+                    Padding="10,8" 
+                    BorderThickness="1" 
+                    BorderBrush="{StaticResource BorderColor}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Status: " FontWeight="SemiBold"/>
+                    <TextBlock x:Name="StatusText" Text="Ready" Foreground="{StaticResource SecondaryColor}"/>
+                </StackPanel>
+            </Border>
+            
+            <Button Grid.Column="1" 
+                    Content="Open Output File" 
+                    Style="{StaticResource ModernButton}"
+                    Width="150" 
+                    Height="36"
+                    Click="OpenOutputButton_Click" 
+                    IsEnabled="{Binding IsScanComplete}"/>
+        </Grid>
     </Grid>
 </Window>
